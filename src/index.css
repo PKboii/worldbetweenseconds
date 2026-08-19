@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #e8edf2;
+  --dim: #66707c;
+  --amber: #ffb36b;
+  --cyanx: #7fd7ff;
+  --warn: #ff5a4a;
+}
+
+html, body {
+  margin: 0;
+  background: #000;
+  color: var(--ink);
+  font-family: "Space Grotesk", sans-serif;
+  overscroll-behavior: none;
+}
+
+body.locked { overflow: hidden; }
+
+.font-display { font-family: "Michroma", "Space Grotesk", sans-serif; }
+
+canvas.stage {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  z-index: 0;
+}
+
+/* ── the point ── */
+@keyframes pointPulse {
+  0%, 100% { transform: scale(1); opacity: 0.75; box-shadow: 0 0 18px 2px rgba(255,255,255,0.35); }
+  50% { transform: scale(1.6); opacity: 1; box-shadow: 0 0 42px 8px rgba(255,255,255,0.55); }
+}
+.the-point {
+  width: 7px; height: 7px; border-radius: 999px; background: #fff;
+  animation: pointPulse 2.6s ease-in-out infinite;
+}
+@keyframes pointBurst {
+  0% { transform: scale(1); opacity: 1; }
+  60% { opacity: 1; }
+  100% { transform: scale(52); opacity: 0; }
+}
+.the-point.burst { animation: pointBurst 1.15s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
+@keyframes ringOut {
+  0% { transform: scale(0.2); opacity: 0.9; }
+  100% { transform: scale(14); opacity: 0; }
+}
+.burst-ring {
+  position: absolute; width: 120px; height: 120px; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.5);
+  animation: ringOut 1.4s cubic-bezier(0.15, 0.6, 0.3, 1) forwards;
+}
+
+/* ── typing / subtitles ── */
+@keyframes lineIn {
+  0% { opacity: 0; letter-spacing: 0.42em; filter: blur(6px); }
+  100% { opacity: 1; letter-spacing: 0.3em; filter: blur(0); }
+}
+.line-in { animation: lineIn 1.1s cubic-bezier(0.2, 0.65, 0.25, 1) both; }
+
+@keyframes subIn {
+  0% { opacity: 0; transform: translateY(14px); filter: blur(4px); }
+  12%, 82% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  100% { opacity: 0; transform: translateY(-8px); filter: blur(3px); }
+}
+.subtitle { animation: subIn var(--hold, 4s) cubic-bezier(0.3, 0.6, 0.3, 1) both; }
+.subtitle.entity { color: var(--cyanx); text-shadow: 0 0 22px rgba(127, 215, 255, 0.5); }
+.subtitle.warning { color: var(--warn); text-shadow: 0 0 22px rgba(255, 90, 74, 0.45); }
+.subtitle.whisper { color: #9aa4ae; font-style: italic; }
+
+/* ── glitch ── */
+@keyframes glitchJit {
+  0% { transform: translate(0, 0); opacity: 0.9; }
+  20% { transform: translate(-2px, 1px); opacity: 0.5; }
+  40% { transform: translate(2px, -1px); opacity: 0.85; }
+  60% { transform: translate(-1px, -1px); opacity: 0.4; }
+  80% { transform: translate(1px, 2px); opacity: 0.8; }
+  100% { transform: translate(0, 0); opacity: 0.6; }
+}
+.glitch-line { animation: glitchJit 0.5s steps(2) infinite; }
+@keyframes flickerIn {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.2; }
+  94% { opacity: 1; }
+  97% { opacity: 0.4; }
+}
+.flicker { animation: flickerIn 4s linear infinite; }
+
+/* ── the choice ── */
+.choice-btn {
+  position: relative;
+  border: 1px solid rgba(232, 237, 242, 0.22);
+  padding: 1.4rem 2.6rem;
+  letter-spacing: 0.3em;
+  transition: letter-spacing 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), background 0.4s, color 0.4s, border-color 0.4s, box-shadow 0.4s;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.35);
+}
+.choice-btn:hover {
+  letter-spacing: 0.46em;
+  background: var(--ink);
+  color: #000;
+  border-color: var(--ink);
+  box-shadow: 0 0 60px rgba(232, 237, 242, 0.25);
+}
+.choice-btn.danger:hover {
+  background: var(--warn);
+  border-color: var(--warn);
+  box-shadow: 0 0 60px rgba(255, 90, 74, 0.35);
+}
+.choice-btn:focus-visible { outline: 1px solid var(--cyanx); outline-offset: 4px; }
+
+/* ── temporal UI ── */
+@keyframes tickPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.tick-mark { animation: tickPulse 1s steps(2) infinite; }
+
+@keyframes hintDrift {
+  0%, 100% { transform: translateY(0); opacity: 0.8; }
+  50% { transform: translateY(5px); opacity: 0.45; }
+}
+.hint-drift { animation: hintDrift 2.4s ease-in-out infinite; }
+
+/* fine scanline film texture over everything */
+.film-lines {
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.016) 0px,
+    rgba(255, 255, 255, 0.016) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+
+.enter-btn {
+  border: 1px solid rgba(232, 237, 242, 0.35);
+  padding: 1rem 2.4rem;
+  letter-spacing: 0.42em;
+  transition: all 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  cursor: pointer;
+  background: transparent;
+}
+.enter-btn:hover {
+  background: #fff;
+  color: #000;
+  letter-spacing: 0.55em;
+  box-shadow: 0 0 80px rgba(255, 255, 255, 0.35);
+}
+.enter-btn:focus-visible { outline: 1px solid var(--cyanx); outline-offset: 4px; }
+
+::selection { background: rgba(127, 215, 255, 0.3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .the-point, .hint-drift, .tick-mark, .flicker, .glitch-line { animation-duration: 8s; }
+}
